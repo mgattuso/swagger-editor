@@ -73,5 +73,12 @@
     "start": "grunt serve:dist",
     "build": "grunt build",
     "develop": "grunt serve"
+  },
+  "dependencies": {
+    "body-parser": "^1.15.0",
+    "bootprint": "^0.8.5",
+    "bootprint-openapi": "^0.15.0",
+    "express": "^4.13.4",
+    "inliner": "^1.8.2"
   }
 }

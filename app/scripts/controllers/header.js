@@ -2,7 +2,7 @@
 
 SwaggerEditor.controller('HeaderCtrl', function HeaderCtrl($scope, $modal,
   $stateParams, $state, $rootScope, Storage, Builder, FileLoader, Editor,
-  Codegen, Preferences, YAML, defaults, strings, $localStorage) {
+  Codegen, Preferences, YAML, defaults, strings, $localStorage, $http) {
 
   if ($stateParams.path) {
     $scope.breadcrumbs  = [{ active: true, name: $stateParams.path }];
@@ -10,7 +10,7 @@ SwaggerEditor.controller('HeaderCtrl', function HeaderCtrl($scope, $modal,
     $scope.breadcrumbs  = [];
   }
 
-  // var statusTimeout;
+    // var statusTimeout;
   $rootScope.$watch('progressStatus', function (progressStatus) {
     var status = strings.stausMessages[progressStatus];
     var statusClass = null;
@@ -137,6 +137,24 @@ SwaggerEditor.controller('HeaderCtrl', function HeaderCtrl($scope, $modal,
   $scope.resetSettings = Editor.resetSettings;
   $scope.adjustFontSize = Editor.adjustFontSize;
 
+  var tempJson = "";
+
+  $scope.downloadHtml = function() {
+    console.log("Download HTML", tempJson);
+    $http({
+      method: "POST",
+      url: '/to-html?b=' + new Date().getTime(),
+      data: tempJson
+    }).then(function(response) {
+      var anchor = angular.element('<a/>');
+       anchor.attr({
+           href: 'data:text/html;charset=utf-8,' + encodeURI(response.data),
+           target: '_blank',
+           download: 'output.html'
+       })[0].click();
+    })
+  };
+
   $scope.openExamples = function () {
     $modal.open({
       templateUrl: 'templates/open-examples.html',
@@ -198,6 +216,7 @@ SwaggerEditor.controller('HeaderCtrl', function HeaderCtrl($scope, $modal,
         }
 
         json = JSON.stringify(json, null, 4);
+        tempJson = json;
         var jsonBlob = new Blob([json], {type: MIME_TYPE});
         $scope.jsonDownloadHref = window.URL.createObjectURL(jsonBlob);
         $scope.jsonDownloadUrl = [
