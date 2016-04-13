@@ -150,7 +150,7 @@ SwaggerEditor.controller('HeaderCtrl', function HeaderCtrl($scope, $modal,
        anchor.attr({
            href: 'data:text/html;charset=utf-8,' + encodeURI(response.data),
            target: '_blank',
-           download: 'output.html'
+           download: 'api-spec.html'
        })[0].click();
     })
   };
