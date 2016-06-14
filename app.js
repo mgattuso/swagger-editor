@@ -53,10 +53,10 @@ app.post('/to-html', function(req, res) {
   				.build(path.join(dir + '/output.' + unique + '.json'), dir + "-" + unique)
   				.generate()
   				.done(function(result) {
-  					console.log(result);
   					var ts = new Date().getTime();
   					new Inliner("http://localhost:8080/dist/html-" + unique + "/index.html?" + ts, function (error, html) {
 					  // compressed and inlined HTML page
+					  fs.createReadStream(path.join(dir + '/output.' + unique + '.json')).pipe(fs.createWriteStream(path.join(dir + "-" + unique + '/source.json')));
 					  res.send(html);
 					});
   				});
